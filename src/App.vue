@@ -4,12 +4,16 @@
       <router-link to="/">Home</router-link>
       |
       <router-link to="/about">About</router-link>
-      |
-      <router-link to="/signup">Signup</router-link>
-      |
-      <router-link to="/login">Login</router-link>
-      |
-      <router-link to="/logout">Logout</router-link>
+      <span v-if="isLoggedIn()">
+        |
+        <router-link to="/signup">Signup</router-link>
+      </span>
+      <span v-else>
+        |
+        <router-link to="/login">Login</router-link>
+        |
+        <router-link to="/logout">Logout</router-link>
+      </span>
     </div>
     <router-view />
   </div>

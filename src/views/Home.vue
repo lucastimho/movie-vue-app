@@ -8,7 +8,17 @@
     Plot
     <input type="text" v-model="newMovieParams.plot" />
     <button v-on:click="createMovie()">Add Movie</button>
-    <div v-for="movie in movies" :key="movie.id">
+    <div>
+      Search by name:
+      <input v-model="titleFilter" list="titles" />
+      <datalist id="titles">
+        <option v-for="movie in movies" v-bind:key="movie.id">{{ movie.title }}</option>
+      </datalist>
+    </div>
+    <div>
+      <button v-on:click="setSortAttribute('title')">Sort Alphabetically</button>
+    </div>
+    <div v-for="movie in orderBy(filterBy(movies, titleFilter, 'title'), sortAttribute)" :key="movie.id">
       {{ movie.title }}, {{ movie.year }},
       {{ movie.plot }}
       <button v-on:click="showMovie(movie)">More Info</button>
@@ -45,13 +55,17 @@
 
 <script>
 import axios from "axios";
+import Vue2Filters from "vue2-filters";
 export default {
+  mixins: [Vue2Filters.mixin],
   data: function () {
     return {
       message: "Welcome to Vue.js!",
       movies: [],
       newMovieParams: {},
       currentMovie: { title: "" },
+      titleFilter: "",
+      sortAttribute: "",
     };
   },
   created: function () {
@@ -85,6 +99,9 @@ export default {
         var index = this.movies.indexOf(movie);
         this.movies.splice(index, 1);
       });
+    },
+    setSortAttribute: function (inputAttribute) {
+      this.sortAttribute = inputAttribute;
     },
   },
 };
