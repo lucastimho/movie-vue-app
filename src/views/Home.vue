@@ -9,7 +9,8 @@
     <input type="text" v-model="newMovieParams.plot" />
     <button v-on:click="createMovie()">Add Movie</button>
     <div v-for="movie in movies" :key="movie.id">
-      {{ movie }}
+      {{ movie.title }}, {{ movie.year }},
+      {{ movie.plot }}
       <button v-on:click="showMovie(movie)">More Info</button>
     </div>
     <dialog id="movie-details">
@@ -18,6 +19,7 @@
         <p>
           Title:
           <input type="text" v-model="currentMovie.title" />
+          <small>{{ currentMovie.title.length }} characters</small>
         </p>
         <p>
           Year:
@@ -49,7 +51,7 @@ export default {
       message: "Welcome to Vue.js!",
       movies: [],
       newMovieParams: {},
-      currentMovie: {},
+      currentMovie: { title: "" },
     };
   },
   created: function () {
@@ -67,23 +69,23 @@ export default {
         })
         .catch((error) => console.log(error.response));
     },
-  },
-  showMovie: function (movie) {
-    console.log(movie);
-    this.currentMovie = movie;
-    document.querySelector("#movie-details").showModal();
-  },
-  updateMovie: function (movie) {
-    axios.patch("http://localhost:3000/movies/" + movie.id, movie).then((response) => {
-      console.log(response.data);
-    });
-  },
-  destroyMovie: function (movie) {
-    axios.delete("http://localhost:3000/movies/" + movie.id).then((response) => {
-      console.log(response.data);
-      var index = this.movies.indexOf(movie);
-      this.movies.splice(index, 1);
-    });
+    showMovie: function (movie) {
+      console.log(movie);
+      this.currentMovie = movie;
+      document.querySelector("#movie-details").showModal();
+    },
+    updateMovie: function (movie) {
+      axios.patch("http://localhost:3000/movies/" + movie.id, movie).then((response) => {
+        console.log(response.data);
+      });
+    },
+    destroyMovie: function (movie) {
+      axios.delete("http://localhost:3000/movies/" + movie.id).then((response) => {
+        console.log(response.data);
+        var index = this.movies.indexOf(movie);
+        this.movies.splice(index, 1);
+      });
+    },
   },
 };
 </script>
